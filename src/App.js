@@ -16,12 +16,19 @@ const searchkit = new SearchkitManager(host)
 const MovieHitsGridItem = (props)=> {
   const {bemBlocks, result} = props
 
-  let url = "https://unterrichtsmaterial.ch" + result._source.contents.originalFile.path
-  let thumb = "https://unterrichtsmaterial.ch" + result._source.contents.previewImage.small
-
   const source = extend({}, result._source, result.highlight)
+  // console.log(source);
 
-  console.log(source);
+  let url = "https://unterrichtsmaterial.ch/"
+  if (source.contents && source.contents.originalFile && source.contents.originalFile.path) {
+    url = "https://unterrichtsmaterial.ch" + source.contents.originalFile.path
+  }
+  
+  let thumb = "https://unterrichtsmaterial.ch"
+  if (source.contents && source.contents.previewImage && source.contents.previewImage.small) {
+    thumb = "https://unterrichtsmaterial.ch" + result._source.contents.previewImage.small
+  }
+
   return (
     <div className={bemBlocks.item().mix(bemBlocks.container("item"))} data-qa="hit">
       <a href={url} target="_blank">
@@ -36,8 +43,15 @@ const MovieHitsGridItem = (props)=> {
 const MovieHitsListItem = (props)=> {
   const {bemBlocks, result} = props
 
-  let url = "https://unterrichtsmaterial.ch" + result._source.contents.originalFile.path
-  let thumb = "https://unterrichtsmaterial.ch" + result._source.contents.previewImage.small
+  let url = "https://unterrichtsmaterial.ch/"
+  if (source.contents && source.contents.originalFile && source.contents.originalFile.path) {
+    url = "https://unterrichtsmaterial.ch" + source.contents.originalFile.path
+  }
+  
+  let thumb = "https://unterrichtsmaterial.ch"
+  if (source.contents && source.contents.previewImage && source.contents.previewImage.small) {
+    thumb = "https://unterrichtsmaterial.ch" + result._source.contents.previewImage.small
+  }
 
   const source = extend({}, result._source, result.highlight)
 
@@ -48,7 +62,7 @@ const MovieHitsListItem = (props)=> {
       </div>
       <div className={bemBlocks.item("details")}>
         <a href={url} target="_blank"><h2 className={bemBlocks.item("title")} dangerouslySetInnerHTML={{__html:source.meta.title}}></h2></a>
-        <h3 className={bemBlocks.item("subtitle")}>{source.meta.subject}, {source.meta.grade}/10</h3>
+        <h3 className={bemBlocks.item("subtitle")}>{source.meta.subject}, {source.meta.grade}, Bewertung:{source.meta.ratingNr}</h3>
         <div className={bemBlocks.item("text")} dangerouslySetInnerHTML={{__html:source.meta.text}}></div>
       </div>
     </div>
@@ -66,19 +80,13 @@ class App extends Component {
           <LayoutBody>
 
             <SideBar>
-              <HierarchicalMenuFilter fields={["type.raw", "genres.raw"]} title="Categories" id="categories"/>
-              <DynamicRangeFilter field="metaScore" id="metascore" title="Metascore" rangeFormatter={(count)=> count + "*"}/>
-              <RangeFilter min={0} max={10} field="imdbRating" id="imdbRating" title="IMDB Rating" showHistogram={true}/>
-              <InputFilter id="writers" searchThrottleTime={500} title="Writers" placeholder="Search writers" searchOnChange={true} queryFields={["writers"]} />
-              <RefinementListFilter id="actors" title="Actors" field="actors.raw" size={10}/>
-              <RefinementListFilter translations={{"facets.view_more":"View more writers"}} id="writers" title="Writers" field="writers.raw" operator="OR" size={10}/>
-              <RefinementListFilter id="countries" title="Countries" field="countries.raw" operator="OR" size={10}/>
-              <NumericRefinementListFilter id="runtimeMinutes" title="Length" field="runtimeMinutes" options={[
-                {title:"All"},
-                {title:"up to 20", from:0, to:20},
-                {title:"21 to 60", from:21, to:60},
-                {title:"60 or more", from:61, to:1000}
-              ]}/>
+              <HierarchicalMenuFilter fields={["meta.subject", "meta.topic"]} title="Fach" id="subject" size={10}/>
+              <RefinementListFilter id="grade" title="Schuljahr" field="meta.grade" operator="OR" size={5}/>
+              <RangeFilter min={0} max={150} id="numDownloads" title="Downloads" field="stats.downloads" showHistogram={true}/>
+              <RangeFilter min={0} max={1500} id="numViews" title="Views" field="stats.views" showHistogram={true}/>
+              <RangeFilter min={0} max={5} id="score" title="Bewertung" field="meta.ratingNr"/>
+              <InputFilter id="author" title="Autor" searchThrottleTime={500} placeholder="Nach Autor suchen" searchOnChange={true} queryFields={["author.name"]} />
+              
             </SideBar>
             <LayoutResults>
               <ActionBar>
@@ -89,9 +97,9 @@ class App extends Component {
                   }}/>
                   <ViewSwitcherToggle/>
                   <SortingSelector options={[
-                    {label:"Relevance", field:"_score", order:"desc"},
-                    {label:"Latest Releases", field:"released", order:"desc"},
-                    {label:"Earliest Releases", field:"released", order:"asc"}
+                    {label:"Bewertung", field:"meta.ratingNr", order:"desc"},
+                    {label:"Zuletzt Aufgeschaltet", field:"stats.publicationDate", order:"desc"},
+                    {label:"Zuerst Aufgeschaltet", field:"stats.publicationDate", order:"asc"}
                   ]}/>
                 </ActionBarRow>
 
@@ -102,7 +110,7 @@ class App extends Component {
 
               </ActionBar>
               <ViewSwitcherHits
-                  hitsPerPage={12} highlightFields={["title","plot"]}
+                  hitsPerPage={12} highlightFields={["meta.title","meta.text"]}
                   //sourceFilter={["plot", "title", "poster", "imdbId", "imdbRating", "year"]}
                   hitComponents={[
                     {key:"grid", title:"Grid", itemComponent:MovieHitsGridItem, defaultOption:true},
