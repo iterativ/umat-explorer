@@ -43,6 +43,8 @@ const MovieHitsGridItem = (props)=> {
 const MovieHitsListItem = (props)=> {
   const {bemBlocks, result} = props
 
+  const source = extend({}, result._source, result.highlight)
+
   let url = "https://unterrichtsmaterial.ch/"
   if (source.contents && source.contents.originalFile && source.contents.originalFile.path) {
     url = "https://unterrichtsmaterial.ch" + source.contents.originalFile.path
@@ -53,8 +55,6 @@ const MovieHitsListItem = (props)=> {
     thumb = "https://unterrichtsmaterial.ch" + result._source.contents.previewImage.small
   }
 
-  const source = extend({}, result._source, result.highlight)
-
   return (
     <div className={bemBlocks.item().mix(bemBlocks.container("item"))} data-qa="hit">
       <div className={bemBlocks.item("poster")}>
@@ -63,6 +63,8 @@ const MovieHitsListItem = (props)=> {
       <div className={bemBlocks.item("details")}>
         <a href={url} target="_blank"><h2 className={bemBlocks.item("title")} dangerouslySetInnerHTML={{__html:source.meta.title}}></h2></a>
         <h3 className={bemBlocks.item("subtitle")}>{source.meta.subject}, {source.meta.grade}, Bewertung:{source.meta.ratingNr}</h3>
+        <h3 className={bemBlocks.item("subtitle")}>Views: {source.stats.views}, Downloads: {source.stats.downloads}</h3>
+        <h3 className={bemBlocks.item("subtitle")}>Autor: {source.author.name}</h3>
         <div className={bemBlocks.item("text")} dangerouslySetInnerHTML={{__html:source.meta.text}}></div>
       </div>
     </div>
@@ -86,6 +88,7 @@ class App extends Component {
               <RangeFilter min={0} max={1500} id="numViews" title="Views" field="stats.views" showHistogram={true}/>
               <RangeFilter min={0} max={5} id="score" title="Bewertung" field="meta.ratingNr"/>
               <InputFilter id="author" title="Autor" searchThrottleTime={500} placeholder="Nach Autor suchen" searchOnChange={true} queryFields={["author.name"]} />
+              <RefinementListFilter id="authorList" field="author.name.raw" size={10}/>
               
             </SideBar>
             <LayoutResults>
@@ -118,7 +121,7 @@ class App extends Component {
                   ]}
                   scrollTo="body"
               />
-              <NoHits suggestionsField={"title"}/>
+              <NoHits suggestionsField={"meta.title"}/>
               <Pagination showNumbers={true}/>
             </LayoutResults>
 
