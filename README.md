@@ -8,3 +8,12 @@ Used to start new applications which use Searchkit. Based off the popular create
 - cd searchkit-starter-app
 - yarn
 - npm start
+
+
+## Build and deployment
+
+Build the application for deployment
+- npm run build
+
+Deployment
+- firebase deploy

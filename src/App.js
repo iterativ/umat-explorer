@@ -84,11 +84,11 @@ class App extends Component {
             <SideBar>
               <HierarchicalMenuFilter fields={["meta.subject", "meta.topic"]} title="Fach" id="subject" size={10}/>
               <RefinementListFilter id="grade" title="Schuljahr" field="meta.grade" operator="OR" size={5}/>
-              <RangeFilter min={0} max={150} id="numDownloads" title="Downloads" field="stats.downloads" showHistogram={true}/>
-              <RangeFilter min={0} max={1500} id="numViews" title="Views" field="stats.views" showHistogram={true}/>
+              <DynamicRangeFilter min={0} max={150} id="numDownloads" title="Downloads" field="stats.downloads" showHistogram={true}/>
+              <DynamicRangeFilter min={0} max={1500} id="numViews" title="Views" field="stats.views" showHistogram={true}/>
               <RangeFilter min={0} max={5} id="score" title="Bewertung" field="meta.ratingNr"/>
               <InputFilter id="author" title="Autor" searchThrottleTime={500} placeholder="Nach Autor suchen" searchOnChange={true} queryFields={["author.name"]} />
-              <RefinementListFilter id="authorList" field="author.name.raw" size={10}/>
+              <RefinementListFilter id="authorList" title="Autor" field="author.name.raw" size={10}/>
               
             </SideBar>
             <LayoutResults>
