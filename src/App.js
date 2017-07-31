@@ -101,6 +101,8 @@ class App extends Component {
                   <ViewSwitcherToggle/>
                   <SortingSelector options={[
                     {label:"Bewertung", field:"meta.ratingNr", order:"desc"},
+                    {label:"Downloads", field:"stats.downloads", order:"desc"},
+                    {label:"Views", field:"stats.views", order:"desc"},
                     {label:"Zuletzt Aufgeschaltet", field:"stats.publicationDate", order:"desc"},
                     {label:"Zuerst Aufgeschaltet", field:"stats.publicationDate", order:"asc"}
                   ]}/>
