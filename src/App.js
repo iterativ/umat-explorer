@@ -101,7 +101,6 @@ class App extends Component {
               <MenuFilter field={"meta.title"} title="Wörter" id="tag-cloud" listComponent={TagCloud} size={20} translations={{"All":"Alle"}}/>
               <InputFilter id="author" title="Autor" searchThrottleTime={500} placeholder="Nach Autor suchen" searchOnChange={true} queryFields={["author.name"]} />
               <RefinementListFilter id="authorList" title="Autor" field="author.name.raw" size={10}/>
-              
             </SideBar>
             <LayoutResults>
               <ActionBar>
