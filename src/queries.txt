@@ -1,0 +1,36 @@
+GET /_aliases
+
+GET /documents/_mapping
+
+GET /documents/_count
+
+GET /documents/_search
+
+DELETE /textdocuments
+GET /textdocuments/_search
+
+POST /documents/_search
+{
+    "size": 0,
+    "aggs": {
+        "subject": {
+            "terms": { "field": "meta.subject" },
+            "aggs": {
+                "words": {
+                    "significant_terms" : { 
+                        "field" : "meta.text"
+                    }
+                }
+            }
+        }
+    }
+}
+
+POST /documents/_search
+{
+   "query": {
+      "match": {
+         "meta.title": "comic zeichnen"
+      }
+   }
+}

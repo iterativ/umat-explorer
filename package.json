@@ -2,13 +2,17 @@
   "name": "searchkit-starter",
   "version": "0.1.0",
   "private": true,
-  "devDependencies": {
-    "react-scripts": "0.9.0"
-  },
   "dependencies": {
-    "react": "^15.4.2",
-    "react-dom": "^15.4.2",
-    "searchkit": "^2.1.1"
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "searchkit": "^2.1.1",
+    "searchkit-daterangefilter": "0.0.2",
+    "searchkit-signterms": "0.1.0",
+    "searchkit-recharts": "0.0.1"
+  },
+  "devDependencies": {
+    "react-scripts": "1.0.11",
+    "nwb": "0.18.x"
   },
   "scripts": {
     "start": "react-scripts start",
