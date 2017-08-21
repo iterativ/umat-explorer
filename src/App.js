@@ -13,7 +13,7 @@ import {
 import './index.css'
 
 // import Example from 'searchkit-signterms'
-import { SignTermsFilter, SignTermsDemo } from 'searchkit-signterms'
+import { SignTermsFilter, SignRefinementListFilter, SignTermsDemo } from 'searchkit-signterms'
 
 const host = "https://search-unterrichtsmaterial-jxctov2kzuvuscfmz3mrexpkcq.eu-central-1.es.amazonaws.com"
 const searchkit = new SearchkitManager(host)
@@ -100,8 +100,8 @@ class App extends Component {
             <SideBar>
               <HierarchicalMenuFilter
                 id="subject"
-                fields={["meta.subject", "meta.topic"]}
                 title="Fach"
+                fields={["meta.subject", "meta.topic"]}
                 size={10} />
 
               <SignTermsFilter
@@ -111,11 +111,18 @@ class App extends Component {
                 fields={["meta.subject", "meta.text"]}
                 size={10} />
 
+              <SignRefinementListFilter
+                id="title.words"
+                title="Stichwörter"
+                field="meta.title"
+                operator="OR" 
+                size={10} />
+
               <RefinementListFilter
-                operator="OR"
-                field="meta.grade"
+                id="grade"
                 title="Grades"
-                id="grade" />
+                field="meta.grade"
+                operator="OR" />
 
               <DynamicRangeFilter min={0} max={150} id="numDownloads" title="Downloads" field="stats.downloads" showHistogram={true} />
               <DynamicRangeFilter min={0} max={1500} id="numViews" title="Views" field="stats.views" showHistogram={true} />
